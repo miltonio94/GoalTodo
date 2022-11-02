@@ -2,37 +2,52 @@ module Main exposing (main)
 
 import Browser
 import Browser.Navigation as Nav
-import Html
+import Html exposing (Html)
+import Html.Attributes as Attributes
 import Random
 import Task
 import Time
 import Url
 
 
+
+-- main : Program Model Model Msg
+
+
 main =
-    Browser.application
-        { init = init
+    Browser.sandbox
+        { init = initModel
         , view = view
         , update = update
-        , subscriptions = subscriptions
-        , onUrlChange = UrlChanged
-        , onUrlRequest = LinkClicked
+
+        -- , subscriptions = subscriptions
+        -- , onUrlChange = UrlChanged
+        -- , onUrlRequest = LinkClicked
         }
 
 
-init : flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
-init flags url navKey =
-    ( initModel, Cmd.none )
+
+-- init : flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
+-- init flags url navKey =
+--     ( [], Cmd.none )
 
 
-view : Model -> Browser.Document Msg
+view : Model -> Html.Html msg
 view model =
-    { title = "Todo app", body = [] }
+    Html.div
+        []
+        [ todoForm
+        ]
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+todoForm : Html.Html msg
+todoForm =
+    Html.div [] []
+
+
+update : Msg -> Model -> Model
 update msg model =
-    ( model, Cmd.none )
+    model
 
 
 subscriptions : Model -> Sub Msg
@@ -45,23 +60,26 @@ type Msg
     | AddTodo
     | DeleteTodo
     | CancelTodo
-    | LinkClicked Browser.UrlRequest
-    | UrlChanged Url.Url
+
+
+
+-- | LinkClicked Browser.UrlRequest
+-- | UrlChanged Url.Url
 
 
 type alias TodoItem =
     { title : String
-    , createdOn : Time.Posix
-    , dueDate : Maybe Time.Posix
+    , createdOn : String
+    , dueDate : Maybe String
     , id : String
     , description : String
     }
 
 
 type alias Model =
-    { todos : List TodoItem
-    }
+    { todos : List TodoItem }
 
 
+initModel : Model
 initModel =
     { todos = [] }
