@@ -1,10 +1,12 @@
-module Main exposing (init, main, onUrlChange, onUrlRequest, subscription, update, view)
+module Main exposing (main)
 
 import Browser
+import Browser.Navigation as Nav
 import Html
 import Random
 import Task
 import Time
+import Url
 
 
 main =
@@ -12,39 +14,39 @@ main =
         { init = init
         , view = view
         , update = update
-        , subscription = subscription
-        , onUrlChange = onUrlChange
-        , onUrlRequest = onUrlRequest
+        , subscriptions = subscriptions
+        , onUrlChange = UrlChanged
+        , onUrlRequest = LinkClicked
         }
 
 
-init =
-    identity
+init : flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
+init flags url navKey =
+    ( initModel, Cmd.none )
 
 
-view =
-    identity
+view : Model -> Browser.Document Msg
+view model =
+    { title = "Todo app", body = [] }
 
 
-update =
-    identity
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    ( model, Cmd.none )
 
 
-subscription =
-    identity
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.none
 
 
-onUrlChange =
-    identity
-
-
-onUrlRequest =
-    identity
-
-
-type alias Model =
-    { todos : List TodoItem
-    }
+type Msg
+    = NewTodo
+    | AddTodo
+    | DeleteTodo
+    | CancelTodo
+    | LinkClicked Browser.UrlRequest
+    | UrlChanged Url.Url
 
 
 type alias TodoItem =
@@ -54,3 +56,12 @@ type alias TodoItem =
     , id : String
     , description : String
     }
+
+
+type alias Model =
+    { todos : List TodoItem
+    }
+
+
+initModel =
+    { todos = [] }
