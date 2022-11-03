@@ -107,6 +107,7 @@ subscriptions model =
 
 type Msg
     = NewTodo
+    | TodoDone String
     | TodoInput String
     | AddTodo
     | DeleteTodo
@@ -132,6 +133,7 @@ type TodoStatus
 type alias TodoItem =
     { title : String
     , status : TodoStatus
+    , id : String
 
     -- , createdOn : String
     -- , dueDate : Maybe String
@@ -141,7 +143,11 @@ type alias TodoItem =
 
 
 type alias Model =
-    { view : Page, todos : List TodoItem, newTodo : String }
+    { nextId : Int
+    , view : Page
+    , todos : List TodoItem
+    , newTodo : String
+    }
 
 
 initModel : Model
@@ -149,4 +155,5 @@ initModel =
     { view = Home
     , newTodo = ""
     , todos = []
+    , nextId = 0
     }
