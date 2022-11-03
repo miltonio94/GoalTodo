@@ -51,10 +51,16 @@ view model =
 
 
 renderListItem : TodoItem -> Html Msg
-renderListItem todoList =
+renderListItem todo =
     Html.div
         []
-        [ Html.text todoList.title ]
+        [ case todo.status of
+            Done ->
+                Html.u [] [ Html.text todo.title ]
+
+            Pending ->
+                Html.text todo.title
+        ]
 
 
 newListItemButton : Html Msg
@@ -103,9 +109,10 @@ update msg model =
         AddTodo ->
             { model
                 | todos =
-                    (::) { title = model.newTodo, status = Pending } model.todos
+                    (::) { title = model.newTodo, status = Pending, id = "todo" ++ String.fromInt model.nextId } model.todos
                 , newTodo = ""
                 , view = Home
+                , nextId = model.nextId + 1
             }
 
         _ ->
