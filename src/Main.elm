@@ -69,14 +69,26 @@ todoForm : Model -> Html.Html Msg
 todoForm model =
     Html.div
         []
-        [ textInput "text" "Todo" model.newTodo TodoInput
+        [ textInput "Todo" model.newTodo TodoInput
         , Html.button [ Events.onClick AddTodo ] [ Html.text "create" ]
         ]
 
 
-textInput : String -> String -> String -> (String -> Msg) -> Html Msg
-textInput typeOfInput placeholder value toMsg =
-    Html.input [ Attributes.type_ typeOfInput, Attributes.placeholder placeholder, Attributes.value value, Events.onInput toMsg ] []
+textInput : String -> String -> (String -> Msg) -> Html Msg
+textInput placeholder value toMsg =
+    Html.input [ Attributes.type_ "text", Attributes.placeholder placeholder, Attributes.value value, Events.onInput toMsg ] []
+
+
+checkboxInput : String -> String -> String -> Bool -> (String -> Msg) -> Html Msg
+checkboxInput label name value isChecked toMsg =
+    Html.input
+        [ Attributes.type_ "checkbox"
+        , Attributes.name name
+        , Attributes.value value
+        , Attributes.checked isChecked
+        , Events.onInput toMsg
+        ]
+        []
 
 
 update : Msg -> Model -> Model
