@@ -56,10 +56,15 @@ renderListItem todo =
         []
         [ case todo.status of
             Done ->
-                Html.u [] [ Html.text todo.title ]
+                checkboxInput todo.title todo.id todo.id True TodoUndone
 
+            -- Html.u
+            --     []
+            --     [ Html.text todo.title ]
             Pending ->
-                Html.text todo.title
+                checkboxInput todo.title todo.id todo.id False TodoDone
+
+        -- Html.text todo.title
         ]
 
 
@@ -87,14 +92,18 @@ textInput placeholder value toMsg =
 
 checkboxInput : String -> String -> String -> Bool -> (String -> Msg) -> Html Msg
 checkboxInput label name value isChecked toMsg =
-    Html.input
-        [ Attributes.type_ "checkbox"
-        , Attributes.name name
-        , Attributes.value value
-        , Attributes.checked isChecked
-        , Events.onInput toMsg
+    -- TODO: line through label when it's done
+    Html.div []
+        [ Html.input
+            [ Attributes.type_ "checkbox"
+            , Attributes.name name
+            , Attributes.value value
+            , Attributes.checked isChecked
+            , Events.onInput toMsg
+            ]
+            []
+        , Html.label [ Attributes.for value ] [ Html.text label ]
         ]
-        []
 
 
 update : Msg -> Model -> Model
@@ -115,6 +124,20 @@ update msg model =
                 , nextId = model.nextId + 1
             }
 
+        TodoDone id ->
+            { model
+                | todos =
+                    List.map
+                        (\t ->
+                            if id == t.id then
+                                { t | status = Done }
+
+                            else
+                                t
+                        )
+                        model.todos
+            }
+
         _ ->
             model
 
@@ -127,6 +150,7 @@ subscriptions model =
 type Msg
     = NewTodo
     | TodoDone String
+    | TodoUndone String
     | TodoInput String
     | AddTodo
     | DeleteTodo
