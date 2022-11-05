@@ -56,13 +56,21 @@ renderListItem todo =
         []
         [ case todo.status of
             Done ->
-                checkboxInput todo.title todo.id todo.id True TodoUndone
+                Html.s
+                    []
+                    [ checkboxInput
+                        todo.title
+                        todo.id
+                        todo.id
+                        True
+                        ToggleDone
+                    ]
 
             -- Html.u
             --     []
             --     [ Html.text todo.title ]
             Pending ->
-                checkboxInput todo.title todo.id todo.id False TodoDone
+                checkboxInput todo.title todo.id todo.id False ToggleDone
 
         -- Html.text todo.title
         ]
@@ -124,13 +132,18 @@ update msg model =
                 , nextId = model.nextId + 1
             }
 
-        TodoDone id ->
+        ToggleDone id ->
             { model
                 | todos =
                     List.map
                         (\t ->
                             if id == t.id then
-                                { t | status = Done }
+                                case t.status of
+                                    Done ->
+                                        { t | status = Pending }
+
+                                    Pending ->
+                                        { t | status = Done }
 
                             else
                                 t
@@ -149,8 +162,7 @@ subscriptions model =
 
 type Msg
     = NewTodo
-    | TodoDone String
-    | TodoUndone String
+    | ToggleDone String
     | TodoInput String
     | AddTodo
     | DeleteTodo
