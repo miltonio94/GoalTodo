@@ -6,6 +6,7 @@ import Html exposing (Html)
 import Html.Attributes as Attributes
 import Html.Events as Events
 import List
+import Molecule.InputFields as InputFields
 import Random
 import Task
 import Time
@@ -185,16 +186,25 @@ type TodoStatus
 -- | UrlChanged Url.Url
 
 
+todoToCheckboxField : TodoItem -> InputFields.CheckboxField
+todoToCheckboxField todo name toChecked =
+    InputFields.Checkbox name todo.status toChecked ToggleDone todo.title
+
+
 type alias TodoItem =
     { title : String
     , status : TodoStatus
-    , id : String
+    , id : TodoId
 
     -- , createdOn : String
     -- , dueDate : Maybe String
     -- , id : String
     -- , description : String
     }
+
+
+type TodoId
+    = TodoId String
 
 
 type alias Model =
